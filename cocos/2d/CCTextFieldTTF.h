@@ -64,7 +64,7 @@ public:
     /**
     @brief    If the sender doesn't want to insert the text, return true;
     */
-    virtual bool onTextFieldInsertText(TextFieldTTF * sender, const char * text, int nLen)
+    virtual bool onTextFieldInsertText(TextFieldTTF * sender, const char * text, size_t nLen)
     {
         CC_UNUSED_PARAM(sender);
         CC_UNUSED_PARAM(text);
@@ -75,7 +75,7 @@ public:
     /**
     @brief    If the sender doesn't want to delete the delText, return true;
     */
-    virtual bool onTextFieldDeleteBackward(TextFieldTTF * sender, const char * delText, int nLen)
+    virtual bool onTextFieldDeleteBackward(TextFieldTTF * sender, const char * delText, size_t nLen)
     {
         CC_UNUSED_PARAM(sender);
         CC_UNUSED_PARAM(delText);
@@ -145,10 +145,13 @@ public:
     inline void setDelegate(TextFieldDelegate* delegate) { _delegate = delegate; };
 
     inline int getCharCount() const { return _charCount; };
-    virtual const Color3B& getColorSpaceHolder();
-    virtual void setColorSpaceHolder(const Color3B& color);
+    
+    virtual const Color4B& getColorSpaceHolder();
 
-    virtual void setColor(const Color3B& color) override;
+    virtual void setColorSpaceHolder(const Color3B& color);
+    virtual void setColorSpaceHolder(const Color4B& color);
+
+    virtual void setTextColor(const Color4B& textColor) override;
 
     // input text property
     virtual void setString(const std::string& text) override;
@@ -171,7 +174,7 @@ protected:
 
     virtual bool canAttachWithIME() override;
     virtual bool canDetachWithIME() override;
-    virtual void insertText(const char * text, int len) override;
+    virtual void insertText(const char * text, size_t len) override;
     virtual void deleteBackward() override;
     virtual const std::string& getContentText() override;
 
@@ -181,8 +184,8 @@ protected:
     std::string _inputText;
 
     std::string _placeHolder;
-    Color3B _colorSpaceHolder;
-    Color3B _colorText;
+    Color4B _colorSpaceHolder;
+    Color4B _colorText;
 
     bool _secureTextEntry;
 

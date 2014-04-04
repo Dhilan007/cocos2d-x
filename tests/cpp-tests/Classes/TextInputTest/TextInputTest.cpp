@@ -13,7 +13,7 @@ enum
     kTextInputTestsCount,
 }; 
 
-#define FONT_NAME                       "Thonburi"
+#define FONT_NAME                       "fonts/Thonburi.ttf"
 #define FONT_SIZE                       36
 
 static int testIdx = -1; 
@@ -166,7 +166,7 @@ void KeyboardNotificationLayer::keyboardWillShow(IMEKeyboardNotificationInfo& in
     // move all the children node of KeyboardNotificationLayer
     auto& children = getChildren();
     Node * node = 0;
-    int count = children.size();
+    ssize_t count = children.size();
     Point pos;
     for (int i = 0; i < count; ++i)
     {
@@ -356,7 +356,7 @@ bool TextFieldTTFActionTest::onTextFieldDetachWithIME(TextFieldTTF * sender)
     return false;
 }
 
-bool TextFieldTTFActionTest::onTextFieldInsertText(TextFieldTTF * sender, const char * text, int nLen)
+bool TextFieldTTFActionTest::onTextFieldInsertText(TextFieldTTF * sender, const char * text, size_t nLen)
 {
     // if insert enter, treat as default to detach with ime
     if ('\n' == *text)
@@ -371,7 +371,7 @@ bool TextFieldTTFActionTest::onTextFieldInsertText(TextFieldTTF * sender, const 
     }
 
     // create a insert text sprite and do some action
-    auto label = LabelTTF::create(text, FONT_NAME, FONT_SIZE);
+    auto label = Label::create(text, FONT_NAME, FONT_SIZE);
     this->addChild(label);
     Color3B color(226, 121, 7);
     label->setColor(color);
@@ -401,10 +401,10 @@ bool TextFieldTTFActionTest::onTextFieldInsertText(TextFieldTTF * sender, const 
     return false;
 }
 
-bool TextFieldTTFActionTest::onTextFieldDeleteBackward(TextFieldTTF * sender, const char * delText, int nLen)
+bool TextFieldTTFActionTest::onTextFieldDeleteBackward(TextFieldTTF * sender, const char * delText, size_t nLen)
 {
     // create a delete text sprite and do some action
-    auto label = LabelTTF::create(delText, FONT_NAME, FONT_SIZE);
+    auto label = Label::create(delText, FONT_NAME, FONT_SIZE);
     this->addChild(label);
 
     // move the sprite to fly out

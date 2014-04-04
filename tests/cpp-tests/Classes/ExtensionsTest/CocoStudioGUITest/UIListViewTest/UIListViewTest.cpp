@@ -2,12 +2,7 @@
 
 #include "UIListViewTest.h"
 
-const char* font_UIListViewTest =
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-"Marker Felt";
-#else
-"cocosui/Marker Felt.ttf";
-#endif
+const char* font_UIListViewTest = "fonts/Marker Felt.ttf";
 
 // UIListViewTest_Vertical
 
@@ -31,7 +26,7 @@ bool UIListViewTest_Vertical::init()
         
         _displayValueLabel = Text::create();
         _displayValueLabel->setText("Move by vertical direction");
-        _displayValueLabel->setFontName("Marker Felt");
+        _displayValueLabel->setFontName("fonts/Marker Felt.ttf");
         _displayValueLabel->setFontSize(32);
         _displayValueLabel->setAnchorPoint(Point(0.5f, -1.0f));
         _displayValueLabel->setPosition(Point(widgetSize.width / 2.0f, widgetSize.height / 2.0f + _displayValueLabel->getContentSize().height * 1.5f));
@@ -40,7 +35,7 @@ bool UIListViewTest_Vertical::init()
         
         Text* alert = Text::create();
         alert->setText("ListView vertical");
-        alert->setFontName("Marker Felt");
+        alert->setFontName("fonts/Marker Felt.ttf");
         alert->setFontSize(30);
         alert->setColor(Color3B(159, 168, 176));
         alert->setPosition(Point(widgetSize.width / 2.0f, widgetSize.height / 2.0f - alert->getSize().height * 3.075f));
@@ -95,7 +90,7 @@ bool UIListViewTest_Vertical::init()
         listView->setItemModel(default_item);
         
         // add default item
-        int count = _array->count();
+        ssize_t count = _array->count();
         for (int i = 0; i < count / 4; ++i)
         {
             listView->pushBackDefaultItem();
@@ -125,7 +120,7 @@ bool UIListViewTest_Vertical::init()
         }
         // insert custom item
         Vector<Widget*>& items = listView->getItems();
-        int items_count = items.size();
+        ssize_t items_count = items.size();
         for (int i = 0; i < count / 4; ++i)
         {
             Button* custom_button = Button::create();
@@ -149,7 +144,7 @@ bool UIListViewTest_Vertical::init()
         {
             Widget* item = listView->getItem(i);
             Button* button = static_cast<Button*>(item->getChildByName("Title Button"));
-            int index = listView->getIndex(item);
+            ssize_t index = listView->getIndex(item);
             button->setTitleText(static_cast<__String*>(_array->getObjectAtIndex(index))->getCString());
         }
         
@@ -179,12 +174,14 @@ void UIListViewTest_Vertical::selectedItemEvent(Ref *pSender, ListViewEventType 
         case cocos2d::ui::LISTVIEW_ONSELECTEDITEM_START:
         {
             ListView* listView = static_cast<ListView*>(pSender);
+            CC_UNUSED_PARAM(listView);
             CCLOG("select child start index = %ld", listView->getCurSelectedIndex());
             break;
         }
         case cocos2d::ui::LISTVIEW_ONSELECTEDITEM_END:
         {
             ListView* listView = static_cast<ListView*>(pSender);
+            CC_UNUSED_PARAM(listView);
             CCLOG("select child end index = %ld", listView->getCurSelectedIndex());
             break;
         }
@@ -214,7 +211,7 @@ bool UIListViewTest_Horizontal::init()
         
         _displayValueLabel = Text::create();
         _displayValueLabel->setText("Move by horizontal direction");
-        _displayValueLabel->setFontName("Marker Felt");
+        _displayValueLabel->setFontName("fonts/Marker Felt.ttf");
         _displayValueLabel->setFontSize(32);
         _displayValueLabel->setAnchorPoint(Point(0.5f, -1.0f));
         _displayValueLabel->setPosition(Point(widgetSize.width / 2.0f, widgetSize.height / 2.0f + _displayValueLabel->getContentSize().height * 1.5f));
@@ -223,7 +220,7 @@ bool UIListViewTest_Horizontal::init()
         
         Text* alert = Text::create();
         alert->setText("ListView horizontal");
-        alert->setFontName("Marker Felt");
+        alert->setFontName("fonts/Marker Felt.ttf");
         alert->setFontSize(30);
         alert->setColor(Color3B(159, 168, 176));
         alert->setPosition(Point(widgetSize.width / 2.0f, widgetSize.height / 2.0f - alert->getSize().height * 3.075f));
@@ -278,7 +275,7 @@ bool UIListViewTest_Horizontal::init()
         listView->setItemModel(default_item);
         
         // add default item
-        int count = _array->count();
+        ssize_t count = _array->count();
         for (int i = 0; i < count / 4; ++i)
         {
             listView->pushBackDefaultItem();
@@ -308,7 +305,7 @@ bool UIListViewTest_Horizontal::init()
         }
         // insert custom item
         Vector<Widget*>& items = listView->getItems();
-        int items_count = items.size();
+        ssize_t items_count = items.size();
         for (int i = 0; i < count / 4; ++i)
         {
             Button* custom_button = Button::create();
@@ -332,7 +329,7 @@ bool UIListViewTest_Horizontal::init()
         {
             Widget *item = listView->getItem(i);
             Button *button = static_cast<Button*>(item->getChildByName("Title Button"));
-            int index = listView->getIndex(item);
+            ssize_t index = listView->getIndex(item);
             button->setTitleText(static_cast<__String*>(_array->getObjectAtIndex(index))->getCString());
         }
         
@@ -362,12 +359,14 @@ void UIListViewTest_Horizontal::selectedItemEvent(Ref *pSender, ListViewEventTyp
         case cocos2d::ui::LISTVIEW_ONSELECTEDITEM_START:
         {
             ListView* listView = static_cast<ListView*>(pSender);
+            CC_UNUSED_PARAM(listView);
             CCLOG("select child start index = %ld", listView->getCurSelectedIndex());
             break;
         }
         case cocos2d::ui::LISTVIEW_ONSELECTEDITEM_END:
         {
             ListView* listView = static_cast<ListView*>(pSender);
+            CC_UNUSED_PARAM(listView);
             CCLOG("select child end index = %ld", listView->getCurSelectedIndex());
             break;
         }

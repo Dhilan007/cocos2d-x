@@ -89,17 +89,13 @@ public:
         const Size& dimensions = Size::ZERO, TextHAlignment hAlignment = TextHAlignment::LEFT,
         TextVAlignment vAlignment = TextVAlignment::TOP);
 
-    CC_DEPRECATED_ATTRIBUTE static Label* createWithTTF(const std::string& label, const std::string& fontFilePath, 
-        int fontSize, int lineSize = 0, TextHAlignment alignment = TextHAlignment::LEFT, 
-        GlyphCollection glyphs = GlyphCollection::DYNAMIC, const char *customGlyphs = 0, bool useDistanceField = false);
-
     /** create a label with TTF configuration
      * It will generate texture of character by freetype.
      */
-    static Label* createWithTTF(const TTFConfig& ttfConfig, const std::string& text, TextHAlignment alignment = TextHAlignment::LEFT, int lineWidth = 0);
+    static Label* createWithTTF(const TTFConfig& ttfConfig, const std::string& text, TextHAlignment alignment = TextHAlignment::LEFT, int maxLineWidth = 0);
     
     static Label* createWithBMFont(const std::string& bmfontFilePath, const std::string& text,
-        const TextHAlignment& alignment = TextHAlignment::LEFT, int lineWidth = 0, 
+        const TextHAlignment& alignment = TextHAlignment::LEFT, int maxLineWidth = 0, 
         const Point& imageOffset = Point::ZERO);
     
     static Label * createWithCharMap(const std::string& charMapFile, int itemWidth, int itemHeight, int startCharMap);
@@ -116,6 +112,7 @@ public:
     virtual bool setTTFConfig(const TTFConfig& ttfConfig);
 
     virtual bool setBMFontFilePath(const std::string& bmfontFilePath, const Point& imageOffset = Point::ZERO);
+    const std::string& getBMFontFilePath() const { return _bmFontPath;}
 
     virtual bool setCharMap(const std::string& charMapFile, int itemWidth, int itemHeight, int startCharMap);
     virtual bool setCharMap(Texture2D* texture, int itemWidth, int itemHeight, int startCharMap);
@@ -136,24 +133,21 @@ public:
 
     virtual const std::string& getString() const override {  return _originalUTF8String; }
 
-    CC_DEPRECATED_ATTRIBUTE void setLabelEffect(LabelEffect effect,const Color3B& effectColor);
-
     /**
      * Enable shadow for the label
      *
      * @todo support blur for shadow effect
      */
-    virtual void enableShadow(const Color3B& shadowColor = Color3B::BLACK,const Size &offset = Size(2,-2), float opacity = 0.75f, int blurRadius = 0);
+    virtual void enableShadow(const Color4B& shadowColor = Color4B::BLACK,const Size &offset = Size(2,-2), int blurRadius = 0);
 
     /** only support for TTF */
     virtual void enableOutline(const Color4B& outlineColor,int outlineSize = -1);
 
     /** only support for TTF */
-    virtual void enableGlow(const Color3B& glowColor);
+    virtual void enableGlow(const Color4B& glowColor);
 
     /** disable shadow/outline/glow rendering */
     virtual void disableEffect();
-    
 
     void setAlignment(TextHAlignment hAlignment) { setAlignment(hAlignment,_vAlignment);}
     TextHAlignment getTextAlignment() const { return _hAlignment;}
@@ -199,25 +193,37 @@ public:
     virtual void setFontName(const std::string& fontName);
     virtual const std::string& getFontName() const;
 
-    virtual void setFontSize(int fontSize);
-    virtual int getFontSize() const;
+    virtual void setFontSize(float fontSize);
+    virtual float getFontSize() const;
 
-    virtual bool isOpacityModifyRGB() const override;
-    virtual void setOpacityModifyRGB(bool isOpacityModifyRGB) override;
-    virtual void setColor(const Color3B& color) override;
+    /** Sets the text color
+     *
+     */
+    virtual void setTextColor(const Color4B &color);
+
+    const Color4B& getTextColor() const { return _textColor;}
 
     virtual Sprite * getLetter(int lettetIndex);
 
+    /** clip upper and lower margin for reduce height of label.
+     */
+    void setClipMarginEnabled(bool clipEnabled) { _clipEnabled = clipEnabled; }
+    bool isClipMarginEnabled() const { return _clipEnabled; }
     // font related stuff
     int getCommonLineHeight() const;
     
     // string related stuff
     int getStringNumLines() const { return _currNumLines;}
     int getStringLength() const;
-    CC_DEPRECATED_ATTRIBUTE int getStringLenght() const { return getStringLength(); }
+
+    FontAtlas* getFontAtlas() { return _fontAtlas; }
     
-    virtual void visit(Renderer *renderer, const kmMat4 &parentTransform, bool parentTransformUpdated) override;
-    virtual void draw(Renderer *renderer, const kmMat4 &transform, bool transformUpdated) override;
+    virtual void setBlendFunc(const BlendFunc &blendFunc) override;
+
+    virtual bool isOpacityModifyRGB() const override;
+    virtual void setOpacityModifyRGB(bool isOpacityModifyRGB) override;
+    virtual void updateDisplayedColor(const Color3B& parentColor) override;
+    virtual void updateDisplayedOpacity(GLubyte parentOpacity) override;
 
     virtual void setScale(float scale) override;
     virtual void setScaleX(float scaleX) override;
@@ -226,9 +232,16 @@ public:
     virtual float getScaleY() const override;
 
     virtual void addChild(Node * child, int zOrder=0, int tag=0) override;
+    virtual void sortAllChildren() override;
+
     virtual std::string getDescription() const override;
 
     virtual const Size& getContentSize() const override;
+
+    virtual Rect getBoundingBox() const override;
+
+    virtual void visit(Renderer *renderer, const kmMat4 &parentTransform, bool parentTransformUpdated) override;
+    virtual void draw(Renderer *renderer, const kmMat4 &transform, bool transformUpdated) override;
 
     /** Listen "come to background" message
      It only has effect on Android.
@@ -239,6 +252,13 @@ public:
      */
     void listenToFontAtlasPurge(EventCustom *event);
 
+    CC_DEPRECATED_ATTRIBUTE static Label* createWithTTF(const std::string& label, const std::string& fontFilePath, 
+        int fontSize, int maxLineWidth = 0, TextHAlignment alignment = TextHAlignment::LEFT, 
+        GlyphCollection glyphs = GlyphCollection::DYNAMIC, const char *customGlyphs = 0, bool useDistanceField = false);
+
+    CC_DEPRECATED_ATTRIBUTE int getStringLenght() const { return getStringLength(); }
+
+    CC_DEPRECATED_ATTRIBUTE void setLabelEffect(LabelEffect effect,const Color3B& effectColor);
 protected:
     void onDraw(const kmMat4& transform, bool transformUpdated);
 
@@ -248,6 +268,7 @@ protected:
 
         Point position;
         Size  contentSize;
+        int   atlasIndex;
     };
     enum class LabelType {
 
@@ -282,7 +303,7 @@ protected:
     bool setOriginalString(unsigned short *stringToSet);
     void computeStringNumLines();
 
-    void updateSpriteWithLetterDefinition(const FontLetterDefinition &theDefinition, Texture2D *theTexture);
+    void updateQuads();
 
     virtual void updateColor() override;
 
@@ -290,16 +311,20 @@ protected:
 
     void drawShadowWithoutBlur();
 
+    void drawTextSprite(Renderer *renderer, bool parentTransformUpdated);
+
     void createSpriteWithFontDefinition();
 
     void updateFont();
     void reset();
 
+    std::string _bmFontPath;
+
     bool _isOpacityModifyRGB;
     bool _contentDirty;
     bool _fontDirty;
     std::string _fontName;
-    int         _fontSize;
+    float         _fontSize;
     LabelType _currentLabelType;
 
     std::vector<SpriteBatchNode*> _batchNodes;
@@ -339,17 +364,27 @@ protected:
     bool _useA8Shader;
 
     LabelEffect _currLabelEffect;
-    Color3B _effectColor;
+    Color4B _effectColor;
+    Color4F _effectColorF;
 
     GLuint _uniformEffectColor;
+    GLuint _uniformTextColor;
     CustomCommand _customCommand;   
 
+    bool    _shadowDirty;
+    bool    _shadowEnabled;
     Size    _shadowOffset;
-    float   _shadowOpacity;
     int     _shadowBlurRadius;
-    kmMat4  _parentTransform;
+    kmMat4  _shadowTransform;
+    Color3B _shadowColor;
+    float   _shadowOpacity;
+    Sprite*   _shadowNode;
 
-    Color4B _outlineColor;
+    Color4B _textColor;
+    Color4F _textColorF;
+
+    bool _clipEnabled;
+    bool _blendFuncDirty;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Label);

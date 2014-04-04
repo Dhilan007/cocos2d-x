@@ -29,6 +29,23 @@ NS_CC_BEGIN
 
 namespace ui {
     
+static int _calcCharCount(const char * pszText)
+{
+    int n = 0;
+    char ch = 0;
+    while ((ch = *pszText))
+    {
+        CC_BREAK_IF(! ch);
+        
+        if (0x80 != (0xC0 & ch))
+        {
+            ++n;
+        }
+        ++pszText;
+    }
+    return n;
+}
+    
 bool RichElement::init(int tag, const Color3B &color, GLubyte opacity)
 {
     _tag = tag;
@@ -148,7 +165,7 @@ void RichText::initRenderer()
 {
     _elementRenderersContainer = Node::create();
     _elementRenderersContainer->setAnchorPoint(Point(0.5f, 0.5f));
-    Node::addChild(_elementRenderersContainer, 0, -1);
+    addProtectedChild(_elementRenderersContainer, 0, -1);
 }
 
 void RichText::insertElement(RichElement *element, int index)
@@ -184,7 +201,7 @@ void RichText::formatText()
         if (_ignoreSize)
         {
             addNewLine();
-            for (int i=0; i<_richElements.size(); i++)
+            for (ssize_t i=0; i<_richElements.size(); i++)
             {
                 RichElement* element = _richElements.at(i);
                 Node* elementRenderer = NULL;
@@ -219,7 +236,7 @@ void RichText::formatText()
         else
         {
             addNewLine();
-            for (int i=0; i<_richElements.size(); i++)
+            for (ssize_t i=0; i<_richElements.size(); i++)
             {
                 
                 RichElement* element = static_cast<RichElement*>(_richElements.at(i));
@@ -262,7 +279,7 @@ void RichText::handleTextRenderer(const char *text, const char *fontName, float 
     {
         float overstepPercent = (-_leftSpaceWidth) / textRendererWidth;
         std::string curText = text;
-        int stringLength = curText.length();
+        size_t stringLength = _calcCharCount(text);
         int leftLength = stringLength * (1.0f - overstepPercent);
         std::string leftWords = curText.substr(0, leftLength);
         std::string cutWords = curText.substr(leftLength, curText.length()-1);
@@ -322,12 +339,12 @@ void RichText::formarRenderers()
         
         Vector<Node*>* row = (_elementRenders[0]);
         float nextPosX = 0.0f;
-        for (int j=0; j<row->size(); j++)
+        for (ssize_t j=0; j<row->size(); j++)
         {
             Node* l = row->at(j);
             l->setAnchorPoint(Point::ZERO);
             l->setPosition(Point(nextPosX, 0.0f));
-            _elementRenderersContainer->addChild(l, 1, j);
+            _elementRenderersContainer->addChild(l, 1, (int)j);
             Size iSize = l->getContentSize();
             newContentSizeWidth += iSize.width;
             newContentSizeHeight = MAX(newContentSizeHeight, iSize.height);
@@ -344,7 +361,7 @@ void RichText::formarRenderers()
         {
             Vector<Node*>* row = (_elementRenders[i]);
             float maxHeight = 0.0f;
-            for (int j=0; j<row->size(); j++)
+            for (ssize_t j=0; j<row->size(); j++)
             {
                 Node* l = row->at(j);
                 maxHeight = MAX(l->getContentSize().height, maxHeight);
@@ -361,12 +378,12 @@ void RichText::formarRenderers()
             float nextPosX = 0.0f;
             nextPosY -= (maxHeights[i] + _verticalSpace);
             
-            for (int j=0; j<row->size(); j++)
+            for (ssize_t j=0; j<row->size(); j++)
             {
                 Node* l = row->at(j);
                 l->setAnchorPoint(Point::ZERO);
                 l->setPosition(Point(nextPosX, nextPosY));
-                _elementRenderersContainer->addChild(l, 1, i*10 + j);
+                _elementRenderersContainer->addChild(l, 1, (int)(i*10 + j));
                 nextPosX += l->getContentSize().width;
             }
         }
@@ -435,6 +452,11 @@ void RichText::ignoreContentAdaptWithSize(bool ignore)
         _formatTextDirty = true;
         Widget::ignoreContentAdaptWithSize(ignore);
     }
+}
+    
+std::string RichText::getDescription() const
+{
+    return "RichText";
 }
 
 }

@@ -96,7 +96,7 @@ void PerformanceContainerScene::initWithQuantityOfNodes(unsigned int nNodes)
     auto s = Director::getInstance()->getWinSize();
 
     // Title
-    auto label = LabelTTF::create(title().c_str(), "Arial", 32);
+    auto label = Label::create(title().c_str(), "fonts/arial.ttf", 32);
     addChild(label, 1, TAG_TITLE);
     label->setPosition(Point(s.width/2, s.height-50));
 
@@ -104,7 +104,7 @@ void PerformanceContainerScene::initWithQuantityOfNodes(unsigned int nNodes)
     std::string strSubTitle = subtitle();
     if(strSubTitle.length())
     {
-        auto l = LabelTTF::create(strSubTitle.c_str(), "Thonburi", 16);
+        auto l = Label::create(strSubTitle.c_str(), "fonts/Thonburi.ttf", 16);
         addChild(l, 1, TAG_SUBTITLE);
         l->setPosition(Point(s.width/2, s.height-80));
     }
@@ -147,7 +147,7 @@ void PerformanceContainerScene::initWithQuantityOfNodes(unsigned int nNodes)
     menu->setPosition(Point(s.width/2, s.height/2+15));
     addChild(menu, 1);
 
-    auto infoLabel = LabelTTF::create("0 nodes", "Marker Felt", 30);
+    auto infoLabel = Label::create("0 nodes", "fonts/Marker Felt.ttf", 30);
     infoLabel->setColor(Color3B(0,200,20));
     infoLabel->setPosition(Point(s.width/2, s.height/2-15));
     addChild(infoLabel, 1, kTagInfoLayer);
@@ -176,7 +176,7 @@ void PerformanceContainerScene::initWithQuantityOfNodes(unsigned int nNodes)
     auto toggle = MenuItemToggle::createWithCallback([this](Ref* sender){
         auto toggle = static_cast<MenuItemToggle*>(sender);
         this->_type = toggle->getSelectedIndex();
-        auto label = static_cast<LabelTTF*>(this->getChildByTag(TAG_SUBTITLE));
+        auto label = static_cast<Label*>(this->getChildByTag(TAG_SUBTITLE));
         label->setString(StringUtils::format("Test '%s', See console", this->_testFunctions[this->_type].name));
         this->updateProfilerName();
     }, toggleItems);
@@ -248,7 +248,7 @@ void PerformanceContainerScene::updateQuantityLabel()
 {
     if( quantityOfNodes != lastRenderedCount )
     {
-        auto infoLabel = static_cast<LabelTTF*>( getChildByTag(kTagInfoLayer) );
+        auto infoLabel = static_cast<Label*>( getChildByTag(kTagInfoLayer) );
         char str[20] = {0};
         sprintf(str, "%u nodes", quantityOfNodes);
         infoLabel->setString(str);
@@ -327,7 +327,7 @@ void TemplateVectorPerfTest::generateTestFunctions()
         { "replace",     [=](){
             Vector<Node*> nodeVector = createVector();
             
-            srand(time(nullptr));
+            srand((unsigned)time(nullptr));
             ssize_t index = rand() % quantityOfNodes;
             
             CC_PROFILER_START(this->profilerName());
@@ -549,7 +549,7 @@ void ArrayPerfTest::generateTestFunctions()
         { "setObject",     [=](){
             __Array* nodeVector = createArray();
             
-            srand(time(nullptr));
+            srand((unsigned)time(nullptr));
             ssize_t index = rand() % quantityOfNodes;
             
             CC_PROFILER_START(this->profilerName());
@@ -618,7 +618,7 @@ void ArrayPerfTest::generateTestFunctions()
             
         } } ,
         { "removeAllObjects",       [=](){
-            Array* nodeVector = createArray();
+            __Array* nodeVector = createArray();
             
             CC_PROFILER_START(this->profilerName());
             for( int i=0; i<quantityOfNodes; ++i)
@@ -867,7 +867,7 @@ std::string TemplateMapStringKeyPerfTest::subtitle() const
 void DictionaryStringKeyPerfTest::generateTestFunctions()
 {
     auto createDict = [this](){
-        Dictionary* ret = Dictionary::create();
+        __Dictionary* ret = __Dictionary::create();
         
         for( int i=0; i<quantityOfNodes; ++i)
         {
@@ -880,7 +880,7 @@ void DictionaryStringKeyPerfTest::generateTestFunctions()
     
     TestFunction testFunctions[] = {
         { "setObject",    [=](){
-            Dictionary* dict = Dictionary::create();
+            __Dictionary* dict = __Dictionary::create();
             
             std::string* keys = new std::string[quantityOfNodes];
             

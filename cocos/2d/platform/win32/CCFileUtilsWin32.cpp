@@ -96,7 +96,7 @@ bool FileUtilsWin32::init()
     return FileUtils::init();
 }
 
-bool FileUtilsWin32::isFileExist(const std::string& strFilePath) const
+bool FileUtilsWin32::isFileExistInternal(const std::string& strFilePath) const
 {
     if (0 == strFilePath.length())
     {
@@ -293,7 +293,7 @@ string FileUtilsWin32::getWritablePath() const
                 // Create directory
                 if (SUCCEEDED(SHCreateDirectoryExA(NULL, ret.c_str(), NULL)))
                 {
-                    return ret;
+                    return convertPathFormatToUnixStyle(ret);
                 }
             }
         }
