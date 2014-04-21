@@ -712,6 +712,7 @@ Developers:
         
     kicktheken (Kenneth Chan)
         Fixed a bug that the setBlendFunc method of some classes wasn't exposed to LUA.
+        Fix lua project template crash on iOS5.1 device
         
     andyque
         Fixed a bug that missing to check self assignment of Vector<T>, Map<K,V>, Value and String.
@@ -763,6 +764,7 @@ Developers:
         
     wefiends
         s3tc compressed textures with no mipmaps fail to be loaded.
+        Added createWithFullscreen overloaded method that sets video mode
         
     floatinghotpot
         Fixed a bug that no callback is invoked when websocket connection fails
@@ -812,9 +814,22 @@ Developers:
         
     Mazyod
         Fixed a bug that HTTPClient reports 2xx status codes as errors
+        Added missing Text Font and Placeholder feature of EditBox for Mac platform
         
     iSevenDays
         Fixed a bug that the result of 'malloc' is incompatible with type 'unsigned char *' in Image::saveImageToPNG
+        Fixed a potential memory leak in CCEditBoxImplIOS.mm
+        Fixed incompatible pointer conversion in external/chipmunk/src/cpArray.c
+        Fix memory leak in CCImage
+        
+    ololomax
+        Fixed a potential crash in SceneReader::createNodeWithSceneFile
+        
+    gaoxiaosong
+        Fixed a warning in cpCollision.c
+        
+    sachingarg05
+        Re-added orientation change callback in java activity
     
 Retired Core Developers:
     WenSheng Yang
