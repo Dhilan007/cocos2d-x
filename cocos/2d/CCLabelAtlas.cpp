@@ -266,18 +266,15 @@ void LabelAtlas::drawDebugData(const kmMat4& transform, bool transformUpdated)
     kmGLPushMatrix();
     kmGLLoadMatrix(&transform);
 
-    auto origin    = Director::getInstance()->getWinSize();
+    auto origin    = Point(0,0);
     auto size = this->getContentSize();
-
-    origin.width = origin.width   / 2 - (size.width / 2);
-    origin.height = origin.height / 2 - (size.height / 2);
 
     Point vertices[4]=
     {
-        Point(origin.width, origin.height),
-        Point(size.width + origin.width, origin.height),
-        Point(size.width + origin.width, size.height + origin.height),
-        Point(origin.width, size.height + origin.height)
+        origin,
+        Point(origin.x + size.width, origin.y),
+        Point(origin.x + size.width, origin.y + size.height),
+        Point(origin.x, origin.y + size.height)
     };
 
     DrawPrimitives::drawPoly(vertices, 4, true);
