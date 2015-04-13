@@ -99,7 +99,8 @@ bool PhysicsWorldCallback::continues = true;
 int PhysicsWorldCallback::collisionBeginCallbackFunc(cpArbiter *arb, struct cpSpace *space, PhysicsWorld *world)
 {
     CP_ARBITER_GET_SHAPES(arb, a, b);
-    
+    static int cc = 0;
+    log("cc %d", ++cc);
     auto ita = s_physicsShapeMap.find(a);
     auto itb = s_physicsShapeMap.find(b);
     CC_ASSERT(ita != s_physicsShapeMap.end() && itb != s_physicsShapeMap.end());
@@ -791,15 +792,29 @@ void PhysicsWorld::setGravity(const Vect& gravity)
     cpSpaceSetGravity(_cpSpace, PhysicsHelper::point2cpv(gravity));
 }
 
+void PhysicsWorld::setUpdateRate(int rate)
+{
+    if (rate > 0)
+    {
+        _updateRate = rate;
+        _timeStep = Director::getInstance()->getAnimationInterval() * _updateRate / _substeps;
+    }
+}
+
 void PhysicsWorld::setSubsteps(int steps)
 {
     if(steps > 0)
     {
         _substeps = steps;
-        if (steps > 1)
-        {
-          _updateRate = 1;
-        }
+        _timeStep = Director::getInstance()->getAnimationInterval() * _updateRate / _substeps;
+    }
+}
+
+void PhysicsWorld::setTimeStep(float timeStep)
+{
+    if (timeStep > 0.0f)
+    {
+        _timeStep = timeStep;
     }
 }
 
@@ -849,19 +864,16 @@ void PhysicsWorld::update(float delta, bool userCall/* = false*/)
     else
     {
         _updateTime += delta;
-        if (++_updateRateCount >= _updateRate)
+        float fixedDT = _timeStep * _speed;
+        while (_updateTime >= _timeStep)
         {
-            const float dt = _updateTime * _speed / _substeps;
-            for (int i = 0; i < _substeps; ++i)
+            cpSpaceStep(_cpSpace, fixedDT);
+            for (auto& body : _bodies)
             {
-                cpSpaceStep(_cpSpace, dt);
-                for (auto& body : _bodies)
-                {
-                    body->update(dt);
-                }
+                body->update(fixedDT);
             }
-            _updateRateCount = 0;
-            _updateTime = 0.0f;
+
+            _updateTime -= _timeStep;
         }
     }
     
@@ -875,7 +887,7 @@ PhysicsWorld::PhysicsWorld()
 : _gravity(Vec2(0.0f, -98.0f))
 , _speed(1.0f)
 , _updateRate(1)
-, _updateRateCount(0)
+, _timeStep(0.017f)
 , _updateTime(0.0f)
 , _substeps(1)
 , _cpSpace(nullptr)

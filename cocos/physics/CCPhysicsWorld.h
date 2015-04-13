@@ -243,15 +243,22 @@ public:
      * @attention if you setAutoStep(false), this won't work.
      * @param speed  A float number. Speed is the rate at which the simulation executes. default value is 1.0.
      */
-    inline void setSpeed(float speed) { if(speed >= 0.0f) { _speed = speed; } }
+    inline void setSpeed(float speed) { if(speed > 0.0f) { _speed = speed; } }
     
     /**
     * Get the speed of this physics world.
     *
     * @return A float number.
     */
-    inline float getSpeed() { return _speed; }
+    inline float getSpeed() const { return _speed; }
     
+    /** Set the time step of physics world
+    * Unit:second, default value is 0.02
+    * Note: if you disable auto step, this won't work.
+    */
+    void setTimeStep(float timeStep);
+    float getTimeStep() const { return _timeStep; }
+
     /**
      * Set the update rate of this physics world
      * 
@@ -260,7 +267,7 @@ public:
      * @attention if you setAutoStep(false), this won't work.
      * @param rate An interger number, default value is 1.0.
      */
-    inline void setUpdateRate(int rate) { if(rate > 0) { _updateRate = rate; } }
+    inline void setUpdateRate(int rate);
 
 
     /**
@@ -268,7 +275,7 @@ public:
     *
     * @return An interger number.
     */
-    inline int getUpdateRate() { return _updateRate; }
+    inline int getUpdateRate() const { return _updateRate; }
 
     /**
      * set the number of substeps in an update of the physics world.
@@ -354,7 +361,7 @@ protected:
     Vect _gravity;
     float _speed;
     int _updateRate;
-    int _updateRateCount;
+    float _timeStep;
     float _updateTime;
     int _substeps;
     cpSpace* _cpSpace;

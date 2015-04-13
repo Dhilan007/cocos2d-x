@@ -365,8 +365,9 @@ void PhysicsDemoLogoSmash::onEnter()
     PhysicsDemo::onEnter();
     
     getPhysicsWorld()->setGravity(Vec2(0, 0));
-    getPhysicsWorld()->setUpdateRate(5.0f);
-    
+    //getPhysicsWorld()->setUpdateRate(5.0f);
+    getPhysicsWorld()->setTimeStep(0.1f);
+
     _ball = SpriteBatchNode::create("Images/ball.png", sizeof(logo_image)/sizeof(logo_image[0]));
     addChild(_ball);
     for (int y = 0; y < logo_height; ++y)
