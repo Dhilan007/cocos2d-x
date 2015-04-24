@@ -16,6 +16,9 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include \
                     $(LOCAL_PATH)/../../cocos2dx/kazmath/include \
                     $(LOCAL_PATH)/../../cocos2dx/platform/android
 
+LOCAL_EXPORT_LDLIBS := -lOpenSLES \
+                       -landroid
+
 LOCAL_CFLAGS += -Wno-psabi
 LOCAL_EXPORT_CFLAGS += -Wno-psabi
 

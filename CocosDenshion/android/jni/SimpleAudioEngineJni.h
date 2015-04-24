@@ -14,18 +14,19 @@ extern "C"
     extern bool isBackgroundMusicPlayingJNI();
     extern float getBackgroundMusicVolumeJNI();
     extern void setBackgroundMusicVolumeJNI(float volume);
-    extern unsigned int playEffectJNI(const char* path, bool bLoop);
-    extern void stopEffectJNI(unsigned int nSoundId);
     extern void endJNI();
-    extern float getEffectsVolumeJNI();
-    extern void setEffectsVolumeJNI(float volume);
-    extern void preloadEffectJNI(const char *path);
-    extern void unloadEffectJNI(const char* path);
-    extern void pauseEffectJNI(unsigned int nSoundId);
-    extern void pauseAllEffectsJNI();
-    extern void resumeEffectJNI(unsigned int nSoundId);
-    extern void resumeAllEffectsJNI();
-    extern void stopAllEffectsJNI();
 }
+
+extern unsigned int playEffectJNI(const char* path, bool bLoop);
+extern void stopEffectJNI(unsigned int nSoundId);
+extern float getEffectsVolumeJNI();
+extern void setEffectsVolumeJNI(float volume);
+extern void preloadEffectJNI(const char *path);
+extern void unloadEffectJNI(const char* path);
+extern void pauseEffectJNI(unsigned int nSoundId);
+extern void pauseAllEffectsJNI();
+extern void resumeEffectJNI(unsigned int nSoundId);
+extern void resumeAllEffectsJNI();
+extern void stopAllEffectsJNI();
 
 #endif // __SIMPLE_AUDIO_ENGINE_JNI__

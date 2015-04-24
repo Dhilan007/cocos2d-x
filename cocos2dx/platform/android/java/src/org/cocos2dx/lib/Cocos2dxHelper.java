@@ -47,7 +47,6 @@ public class Cocos2dxHelper {
 	// ===========================================================
 
 	private static Cocos2dxMusic sCocos2dMusic;
-	private static Cocos2dxSound sCocos2dSound;
 	private static AssetManager sAssetManager;
 	private static Cocos2dxAccelerometer sCocos2dxAccelerometer;
 	private static boolean sAccelerometerEnabled;
@@ -72,11 +71,7 @@ public class Cocos2dxHelper {
 
 		Cocos2dxHelper.sCocos2dxAccelerometer = new Cocos2dxAccelerometer(pContext);
 		Cocos2dxHelper.sCocos2dMusic = new Cocos2dxMusic(pContext);
-		int simultaneousStreams = Cocos2dxSound.MAX_SIMULTANEOUS_STREAMS_DEFAULT;
-        if (Cocos2dxHelper.getDeviceModel().indexOf("GT-I9100") != -1) {
-            simultaneousStreams = Cocos2dxSound.MAX_SIMULTANEOUS_STREAMS_I9100;
-        }
-        Cocos2dxHelper.sCocos2dSound = new Cocos2dxSound(pContext, simultaneousStreams);
+
 		Cocos2dxHelper.sAssetManager = pContext.getAssets();
 		Cocos2dxBitmap.setContext(pContext);
 		Cocos2dxETCLoader.setContext(pContext);
@@ -169,53 +164,8 @@ public class Cocos2dxHelper {
 		Cocos2dxHelper.sCocos2dMusic.setBackgroundVolume(volume);
 	}
 
-	public static void preloadEffect(final String path) {
-		Cocos2dxHelper.sCocos2dSound.preloadEffect(path);
-	}
-
-	public static int playEffect(final String path, final boolean isLoop) {
-		return Cocos2dxHelper.sCocos2dSound.playEffect(path, isLoop);
-	}
-
-	public static void resumeEffect(final int soundId) {
-		Cocos2dxHelper.sCocos2dSound.resumeEffect(soundId);
-	}
-
-	public static void pauseEffect(final int soundId) {
-		Cocos2dxHelper.sCocos2dSound.pauseEffect(soundId);
-	}
-
-	public static void stopEffect(final int soundId) {
-		Cocos2dxHelper.sCocos2dSound.stopEffect(soundId);
-	}
-
-	public static float getEffectsVolume() {
-		return Cocos2dxHelper.sCocos2dSound.getEffectsVolume();
-	}
-
-	public static void setEffectsVolume(final float volume) {
-		Cocos2dxHelper.sCocos2dSound.setEffectsVolume(volume);
-	}
-
-	public static void unloadEffect(final String path) {
-		Cocos2dxHelper.sCocos2dSound.unloadEffect(path);
-	}
-
-	public static void pauseAllEffects() {
-		Cocos2dxHelper.sCocos2dSound.pauseAllEffects();
-	}
-
-	public static void resumeAllEffects() {
-		Cocos2dxHelper.sCocos2dSound.resumeAllEffects();
-	}
-
-	public static void stopAllEffects() {
-		Cocos2dxHelper.sCocos2dSound.stopAllEffects();
-	}
-
 	public static void end() {
 		Cocos2dxHelper.sCocos2dMusic.end();
-		Cocos2dxHelper.sCocos2dSound.end();
 	}
 
 	public static void onResume() {
