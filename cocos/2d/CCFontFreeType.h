@@ -62,7 +62,7 @@ public:
 
     float getOutlineSize() const { return _outlineSize; }
 
-    void renderCharAt(unsigned char *dest,int posX, int posY, unsigned char* bitmap,long bitmapWidth,long bitmapHeight); 
+    void CopyImageData(unsigned char *dest,int posX, int posY, unsigned char* bitmap,long bitmapWidth,long bitmapHeight);
 
     FT_Encoding getEncoding() const { return _encoding; }
 
@@ -89,14 +89,20 @@ private:
     FT_Library getFTLibrary();
     
     int getHorizontalKerningForChars(unsigned short firstChar, unsigned short secondChar) const;
-    unsigned char* getGlyphBitmapWithOutline(unsigned short code, FT_BBox &bbox);
+    unsigned char* getGlyphBitmapWithOutline(unsigned short theChar, unsigned char* glyphBitmap, long &outWidth, long &outHeight, Rect &outRect);
+    unsigned char* loadGlyphWithOutline(unsigned short code, FT_BBox &bbox);
 
     void setGlyphCollection(GlyphCollection glyphs, const char* customGlyphs = nullptr);
     const char* getGlyphCollection() const;
+
+    void CopyGRAYImageData(unsigned char *dest, int posX, int posY, unsigned char* bitmap, long bitmapWidth, long bitmapHeight);
+    void CopyMONOImageData(unsigned char *dest, int posX, int posY, unsigned char* bitmap, long bitmapWidth, long bitmapHeight);
     
     FT_Face _fontRef;
     FT_Stroker _stroker;
     FT_Encoding _encoding;
+    unsigned char _glyphPixelMode;
+    int _glyphPitch;
 
     std::string _fontName;
     bool _distanceFieldEnabled;

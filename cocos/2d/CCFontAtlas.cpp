@@ -366,7 +366,7 @@ bool FontAtlas::prepareLetterDefinitions(const std::u16string& utf16Text)
                     tex->release();
                 }
             }
-            _fontFreeType->renderCharAt(_currentPageData, _currentPageOrigX + adjustForExtend, _currentPageOrigY + adjustForExtend, bitmap, bitmapWidth, bitmapHeight);
+            _fontFreeType->CopyImageData(_currentPageData, _currentPageOrigX + adjustForExtend, _currentPageOrigY + adjustForExtend, bitmap, bitmapWidth, bitmapHeight);
 
             tempDef.U = _currentPageOrigX;
             tempDef.V = _currentPageOrigY;
