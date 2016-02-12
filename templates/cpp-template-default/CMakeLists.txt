@@ -107,6 +107,10 @@ elseif ( WIN32 )
       proj.win32/main.h
       proj.win32/resource.h
     )
+elseif(ANDROID)
+    set(PLATFORM_SPECIFIC_SRC
+      proj.android-studio/app/jni/hellocpp/main.cpp
+    )
 endif()
 
 include_directories(
