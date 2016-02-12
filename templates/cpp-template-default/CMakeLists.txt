@@ -35,6 +35,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${COCOS2D_ROOT}/cmake/Modules/")
 include(CocosBuildHelpers)
 
 # libcocos2d
+set(BUILD_CPP_EMPTY_TEST OFF CACHE BOOL "turn off build cpp-empty-test")
 set(BUILD_CPP_TESTS OFF CACHE BOOL "turn off build cpp-tests")
 set(BUILD_LUA_LIBS OFF CACHE BOOL "turn off build lua related targets")
 set(BUILD_JS_LIBS OFF CACHE BOOL "turn off build js related targets")
@@ -105,6 +106,10 @@ elseif ( WIN32 )
     set(PLATFORM_SPECIFIC_HEADERS
       proj.win32/main.h
       proj.win32/resource.h
+    )
+elseif(ANDROID)
+    set(PLATFORM_SPECIFIC_SRC
+      proj.android-studio/app/jni/hellocpp/main.cpp
     )
 endif()
 
